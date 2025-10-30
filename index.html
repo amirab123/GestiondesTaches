@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>   Exercice 1- Liste de tâches </title>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 flex flex-col items-center min-h-screen p-10">
+    <div id="app" class="w-full sm:max-w-md md:max-w-lg bg-white rounded-xl shadow-lg p-6">
+      <h1 class="text-2xl font-bold mb-4 text-center text-green-600">
+    
+        <img src="img/task.png" alt="Tâches" class="inline-block w-8 h-8 mr-2" />
+
+      Liste de tâches
+      </h1>
+
+ 
+      <button
+        @click="ajouterTache"
+        class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-2 rounded-lg mb-3 "
+      >
+        Ajouter une tâche
+      </button>
+
+  
+      <ul>
+        <li
+          v-for="tache in taches"
+          :key="tache.id"
+          @click="changerEtat(tache)"
+          class="cursor-pointer mb-2 p-3 rounded-lg transition-colors"
+          :class="tache.terminee ? 'bg-yellow-800 text-white' : 'bg-gray-200 text-gray-900'"
+        >
+          {{ tache.titre }}
+        </li>
+      </ul>
+
+
+      <div class="mt-4 text-center font-medium ">
+        <img src="img/check.png" alt="taches terminées" class="inline-block w-4 h-4 mr-2" />
+         Tâches terminées : <span class="font-bold text-green-600 ">{{ nbTerminees }}</span>
+      </div>
+    </div>
+
+
+    <script>
+      const { createApp, watch } = Vue;
+
+      createApp({
+        data() {
+          return {
+            taches: [],
+            nbTerminees: 0,
+          };
+        },
+        methods: {
+          ajouterTache() {
+            const titre = prompt("Entrez le nom de la tâche :");
+            if (titre && titre.trim() !== "") {
+              this.taches.push({
+                id: Date.now(),
+                titre: titre.trim(),
+                terminee: false,
+              });
+            } else {
+              alert("❌ Veuillez entrer un nom de tâche valide !");
+
+            }
+          },
+          changerEtat(tache) {
+            tache.terminee = !tache.terminee;
+          },
+        },
+        watch: {
+       
+          taches: {
+            handler() {
+              this.nbTerminees = this.taches.filter((t) => t.terminee).length;
+            },
+            deep: true,
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
+
+
